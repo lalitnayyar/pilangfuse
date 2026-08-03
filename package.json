@@ -6,7 +6,9 @@
   "scripts": {
     "research": "node src/index.js",
     "server": "node src/server.js",
-    "start": "node src/server.js"
+    "start": "node src/server.js",
+    "check": "node scripts/check-syntax.mjs",
+    "manage": "bash scripts/manage.sh"
   },
   "dependencies": {
     "dotenv": "^16.4.5",

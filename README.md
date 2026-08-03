@@ -1,5 +1,10 @@
 # pilangfuse
 
+[![CI](https://github.com/lalitnayyar/pilangfuse/actions/workflows/ci.yml/badge.svg)](https://github.com/lalitnayyar/pilangfuse/actions/workflows/ci.yml)
+![Node 22+](https://img.shields.io/badge/node-22%2B-3C873A)
+![Docker Ready](https://img.shields.io/badge/docker-ready-2496ED)
+![Langfuse Tracing](https://img.shields.io/badge/langfuse-tracing-6C47FF)
+
 A modular **3-agent research system** that collects web sources, YouTube videos, and generates a polished shareable markdown brief for any topic — with **Langfuse tracing**, **retry/fallback logic**, **live progress activity**, **API endpoints**, **browser UI**, and **Docker support**.
 
 ---
@@ -40,6 +45,8 @@ Every step can be traced with **Langfuse**, and progress is shown in a professio
   - [CLI Usage](#cli-usage)
   - [Web UI Usage](#web-ui-usage)
   - [API Usage](#api-usage)
+- [Management Script](#management-script)
+- [GitHub Actions CI](#github-actions-ci)
 - [Docker Setup](#docker-setup)
 - [Output Format](#output-format)
 - [Error Handling and Retries](#error-handling-and-retries)
@@ -111,6 +118,16 @@ the system will:
 - includes `Dockerfile`
 - includes `docker-compose.yml`
 - easy local or server deployment
+
+### 9. Operations management script
+- interactive terminal menu for common operations
+- one-command deploy, update, start, stop, logs, status, and health checks
+- supports both local mode and Docker mode
+
+### 10. GitHub Actions CI
+- automated dependency install on push and pull request
+- syntax validation for project JavaScript files
+- visible CI badge on the repository homepage
 
 ---
 
@@ -287,6 +304,10 @@ Until you capture real screenshots or GIFs, the README uses placeholder UI asset
 
 ![Live activity timeline placeholder](docs/assets/ui-live-activity-placeholder.svg)
 
+### Report output placeholder
+
+![Report output placeholder](docs/assets/ui-report-output-placeholder.svg)
+
 ### Recommended replacements
 
 After running the app, replace the placeholders with actual assets such as:
@@ -333,9 +354,17 @@ docs/
   assets/
     ui-dashboard-placeholder.svg
     ui-live-activity-placeholder.svg
+    ui-report-output-placeholder.svg
+  DEPLOYMENT.md
 env/
   .env.tavily-youtube.example
   .env.serpapi.example
+scripts/
+  check-syntax.mjs
+  manage.sh
+.github/
+  workflows/
+    ci.yml
 reports/
 Dockerfile
 docker-compose.yml
@@ -767,6 +796,90 @@ GET /api/health
 
 ---
 
+## Management Script
+
+A ready-to-use operations script is available at:
+
+```bash
+bash scripts/manage.sh menu
+```
+
+You can also run it through npm:
+
+```bash
+npm run manage
+```
+
+### What it can do
+
+- install dependencies
+- copy sample env profiles
+- run syntax checks
+- start, stop, restart local server
+- tail local logs
+- build, start, stop Docker deployment
+- show Docker status and logs
+- deploy latest version
+- update repository + dependencies
+- run health checks
+- open the UI in browser
+- run research from CLI
+- back up `reports/`
+- clean runtime PID state
+
+### Common commands
+
+```bash
+bash scripts/manage.sh install
+bash scripts/manage.sh env-tavily
+bash scripts/manage.sh start-local
+bash scripts/manage.sh logs-local
+bash scripts/manage.sh start-docker
+bash scripts/manage.sh status-docker
+bash scripts/manage.sh deploy
+bash scripts/manage.sh health
+bash scripts/manage.sh research "AI agents for software engineering"
+```
+
+### Interactive mode
+
+If you run the script without a command, it opens an interactive console menu:
+
+```bash
+bash scripts/manage.sh
+```
+
+This is useful for everyday app administration and quick local operations.
+
+---
+
+## GitHub Actions CI
+
+A CI workflow is included at:
+
+```text
+.github/workflows/ci.yml
+```
+
+### What CI does
+
+On every push and pull request to `main`, GitHub Actions will:
+
+1. check out the repository
+2. set up Node.js 22
+3. install dependencies with `npm install`
+4. run `npm run check`
+
+### Local equivalent
+
+You can run the same validation locally:
+
+```bash
+npm run check
+```
+
+---
+
 ## Docker Setup
 
 The project includes:
@@ -810,6 +923,24 @@ Example:
 ```bash
 cp env/.env.tavily-youtube.example .env
 docker compose up --build
+```
+
+### Management shortcuts
+
+Instead of remembering Docker commands manually, you can use:
+
+```bash
+bash scripts/manage.sh start-docker
+bash scripts/manage.sh logs-docker
+bash scripts/manage.sh stop-docker
+```
+
+### Deployment guide
+
+For a dedicated deployment walkthrough, see:
+
+```text
+docs/DEPLOYMENT.md
 ```
 
 ---
@@ -959,11 +1090,28 @@ cp env/.env.tavily-youtube.example .env
 npm start
 ```
 
+### Local with management console
+
+```bash
+npm install
+bash scripts/manage.sh env-tavily
+# fill keys in .env
+bash scripts/manage.sh start-local
+```
+
 ### Docker
 
 ```bash
 cp env/.env.tavily-youtube.example .env
 docker compose up --build
+```
+
+### Docker with management console
+
+```bash
+bash scripts/manage.sh env-tavily
+# fill keys in .env
+bash scripts/manage.sh start-docker
 ```
 
 Then open:

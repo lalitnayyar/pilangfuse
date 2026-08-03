@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="900" viewBox="0 0 1440 900" fill="none">
+  <rect width="1440" height="900" rx="28" fill="#07111F"/>
+  <rect x="70" y="60" width="1300" height="780" rx="28" fill="#0E1A2D" stroke="#29425F"/>
+  <text x="110" y="130" fill="#A9C7FF" font-family="Arial, Helvetica, sans-serif" font-size="20">📄 Markdown output preview placeholder</text>
+  <text x="110" y="185" fill="#EAF2FF" font-family="Arial, Helvetica, sans-serif" font-size="36" font-weight="700">AI agents for software engineering</text>
+  <text x="110" y="230" fill="#98A8C7" font-family="Arial, Helvetica, sans-serif" font-size="18">Generated: 2026-08-03T10:15:00.000Z</text>
+  <text x="110" y="315" fill="#EAF2FF" font-family="Arial, Helvetica, sans-serif" font-size="26" font-weight="700">## Executive Summary</text>
+  <text x="110" y="355" fill="#98A8C7" font-family="Arial, Helvetica, sans-serif" font-size="18">This panel can be replaced with an actual screenshot of the generated report page or markdown file.</text>
+  <text x="110" y="440" fill="#EAF2FF" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700">### 1. Example resource</text>
+  <text x="110" y="475" fill="#98A8C7" font-family="Arial, Helvetica, sans-serif" font-size="18">- Brief: Example summary line</text>
+  <text x="110" y="540" fill="#EAF2FF" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700">### 1. Example video</text>
+  <text x="110" y="575" fill="#98A8C7" font-family="Arial, Helvetica, sans-serif" font-size="18">- Channel: Example creator</text>
+  <text x="110" y="720" fill="#98A8C7" font-family="Arial, Helvetica, sans-serif" font-size="18">Replace with: docs/assets/ui-report-output.png</text>
+</svg>
