@@ -6,6 +6,7 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 LOG_DIR="$ROOT_DIR/logs"
 RUN_DIR="$ROOT_DIR/.run"
 PID_FILE="$RUN_DIR/server.pid"
+DOCKER_PORT_FILE="$RUN_DIR/docker-host-port"
 LOCAL_LOG_FILE="$LOG_DIR/server.log"
 DEFAULT_URL="http://localhost:3000"
 
@@ -60,6 +61,90 @@ serialize_env_value() {
     value="${value//$'\r'/\\r}"
     printf '"%s"' "$value"
   fi
+}
+
+is_port_available() {
+  local port="${1:?port is required}"
+  python - "$port" <<'PY'
+import socket, sys
+port = int(sys.argv[1])
+sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+try:
+    sock.bind(("0.0.0.0", port))
+except OSError:
+    raise SystemExit(1)
+finally:
+    sock.close()
+PY
+}
+
+find_available_port() {
+  local start_port="${1:-3000}"
+  local port="$start_port"
+
+  while ! is_port_available "$port"; do
+    port=$((port + 1))
+  done
+
+  printf '%s' "$port"
+}
+
+get_running_docker_host_port() {
+  if ! command -v docker >/dev/null 2>&1; then
+    return 1
+  fi
+
+  if ! docker ps --format '{{.Names}}' | grep -qx "$APP_NAME"; then
+    return 1
+  fi
+
+  docker port "$APP_NAME" 3000/tcp 2>/dev/null | head -n 1 | awk -F: '{print $NF}'
+}
+
+get_docker_url() {
+  local port=""
+
+  if [[ -f "$DOCKER_PORT_FILE" ]]; then
+    port="$(cat "$DOCKER_PORT_FILE")"
+  else
+    port="$(get_running_docker_host_port || true)"
+  fi
+
+  port="${port:-3000}"
+  printf 'http://localhost:%s' "$port"
+}
+
+get_default_app_url() {
+  if [[ -f "$DOCKER_PORT_FILE" ]] || [[ -n "$(get_running_docker_host_port || true)" ]]; then
+    get_docker_url
+  else
+    printf '%s' "$DEFAULT_URL"
+  fi
+}
+
+resolve_docker_host_port() {
+  ensure_env
+  load_env_file
+
+  local running_port=""
+  running_port="$(get_running_docker_host_port || true)"
+  if [[ -n "$running_port" ]]; then
+    printf '%s' "$running_port" > "$DOCKER_PORT_FILE"
+    printf '%s' "$running_port"
+    return 0
+  fi
+
+  local preferred_port="${HOST_PORT:-${PORT:-3000}}"
+  local host_port="$preferred_port"
+
+  if ! is_port_available "$host_port"; then
+    host_port="$(find_available_port "$host_port")"
+    warn "Host port ${preferred_port} is busy. Using available port ${host_port} for Docker deployment."
+  fi
+
+  printf '%s' "$host_port" > "$DOCKER_PORT_FILE"
+  printf '%s' "$host_port"
 }
 
 detect_langfuse_region() {
@@ -117,7 +202,7 @@ verify_langfuse_region() {
 }
 
 langfuse_test() {
-  local url="${1:-$DEFAULT_URL}/api/settings/langfuse/test"
+  local url="${1:-$(get_default_app_url)}/api/settings/langfuse/test"
   step "Calling Langfuse test endpoint: $url"
 
   if ! command -v curl >/dev/null 2>&1; then
@@ -404,17 +489,24 @@ delete_docker_image() {
 start_docker() {
   ensure_env
   local dc
+  local host_port
   dc="$(compose_cmd)"
-  step "Starting application with Docker Compose"
-  $dc up -d --build
-  success "Docker services started"
+  host_port="$(resolve_docker_host_port)"
+  step "Starting application with Docker Compose on host port ${host_port}"
+  HOST_PORT="$host_port" $dc up -d --build
+  success "Docker services started at $(get_docker_url)"
 }
 
 stop_docker() {
   local dc
+  local host_port="${HOST_PORT:-}"
   dc="$(compose_cmd)"
+  if [[ -f "$DOCKER_PORT_FILE" ]]; then
+    host_port="$(cat "$DOCKER_PORT_FILE")"
+  fi
   step "Stopping Docker services"
-  $dc down
+  HOST_PORT="$host_port" $dc down
+  rm -f "$DOCKER_PORT_FILE"
   success "Docker services stopped"
 }
 
@@ -436,7 +528,7 @@ status_docker() {
 }
 
 health_check() {
-  local url="${1:-$DEFAULT_URL}/api/health"
+  local url="${1:-$(get_default_app_url)}/api/health"
   step "Checking health: $url"
   if command -v curl >/dev/null 2>&1; then
     curl -fsS "$url" && printf "\n"
@@ -447,7 +539,7 @@ health_check() {
 }
 
 open_ui() {
-  local url="${1:-$DEFAULT_URL}"
+  local url="${1:-$(get_default_app_url)}"
   info "Opening $url"
   if command -v xdg-open >/dev/null 2>&1; then
     xdg-open "$url" >/dev/null 2>&1 &
@@ -483,7 +575,7 @@ deploy_app() {
   update_app
   build_docker
   start_docker
-  health_check "$DEFAULT_URL"
+  health_check "$(get_docker_url)"
   success "Deployment completed"
 }
 

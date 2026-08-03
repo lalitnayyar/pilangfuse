@@ -6,7 +6,7 @@ services:
     image: ${DOCKER_IMAGE_NAME:-pilangfuse}:${DOCKER_IMAGE_TAG:-latest}
     container_name: pilangfuse
     ports:
-      - "3000:3000"
+      - "${HOST_PORT:-3000}:${PORT:-3000}"
     env_file:
       - .env
     volumes:
