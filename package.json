@@ -1,0 +1,16 @@
+{
+  "name": "pilangfuse",
+  "version": "1.0.0",
+  "description": "Three-agent topic research workflow with Langfuse tracing",
+  "type": "module",
+  "scripts": {
+    "research": "node src/index.js",
+    "server": "node src/server.js",
+    "start": "node src/server.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.21.0",
+    "langfuse": "^3.0.0"
+  }
+}

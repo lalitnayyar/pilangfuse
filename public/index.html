@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>pilangfuse research agents</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="shell">
+      <header class="hero">
+        <div>
+          <p class="eyebrow">🧬 Langfuse-traced multi-agent workflow</p>
+          <h1>Topic Research Studio</h1>
+          <p class="subtitle">Launch 3 coordinated agents to collect web links, YouTube videos, and a polished markdown brief.</p>
+        </div>
+      </header>
+
+      <main class="grid">
+        <section class="panel form-panel">
+          <h2>Start Research</h2>
+          <form id="research-form">
+            <label for="topic">Topic</label>
+            <div class="input-row">
+              <input id="topic" name="topic" type="text" placeholder="e.g. AI agents for software engineering" required />
+              <button type="submit">🚀 Run Agents</button>
+            </div>
+          </form>
+          <p class="hint">Professional progress updates stream live as the agents work.</p>
+          <div id="job-meta" class="job-meta hidden"></div>
+        </section>
+
+        <section class="panel status-panel">
+          <div class="section-head">
+            <h2>Live Activity</h2>
+            <span id="status-badge" class="badge idle">Idle</span>
+          </div>
+          <div id="timeline" class="timeline empty">
+            <div class="empty-state">✨ Start a job to see agent activity, retries, fallback provider usage, and final delivery.</div>
+          </div>
+        </section>
+
+        <section class="panel result-panel">
+          <div class="section-head">
+            <h2>Research Output</h2>
+          </div>
+          <div id="result" class="result empty-state">📄 Your markdown report and collected sources will appear here.</div>
+        </section>
+      </main>
+    </div>
+
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>
