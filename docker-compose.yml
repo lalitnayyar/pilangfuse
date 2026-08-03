@@ -3,6 +3,7 @@ version: "3.9"
 services:
   pilangfuse:
     build: .
+    image: ${DOCKER_IMAGE_NAME:-pilangfuse}:${DOCKER_IMAGE_TAG:-latest}
     container_name: pilangfuse
     ports:
       - "3000:3000"

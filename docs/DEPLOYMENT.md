@@ -38,7 +38,27 @@ http://localhost:3000
 docker compose logs -f
 ```
 
-## 4. Stop deployment
+## 4. Push code vs Docker image
+
+Push source code to GitHub:
+
+```bash
+bash scripts/manage.sh push-code "Your commit message"
+```
+
+Push Docker image to a registry:
+
+```bash
+# add to .env
+DOCKER_IMAGE_NAME=ghcr.io/lalitnayyar/pilangfuse
+DOCKER_IMAGE_TAG=latest
+
+bash scripts/manage.sh push-image
+```
+
+> `.env` is ignored by git, so secrets are not committed.
+
+## 5. Stop deployment
 
 ```bash
 docker compose down

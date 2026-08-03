@@ -821,6 +821,8 @@ npm run manage
 - show Docker status and logs
 - deploy latest version
 - update repository + dependencies
+- push code to GitHub
+- push Docker image to a registry
 - run health checks
 - open the UI in browser
 - run research from CLI
@@ -836,6 +838,8 @@ bash scripts/manage.sh start-local
 bash scripts/manage.sh logs-local
 bash scripts/manage.sh start-docker
 bash scripts/manage.sh status-docker
+bash scripts/manage.sh push-code "Update research workflow"
+bash scripts/manage.sh push-image
 bash scripts/manage.sh deploy
 bash scripts/manage.sh health
 bash scripts/manage.sh research "AI agents for software engineering"
@@ -911,6 +915,8 @@ http://localhost:3000
 - app runs on port `3000`
 - reports are persisted to `./reports`
 - health check calls `/api/health`
+- image name can be configured with `DOCKER_IMAGE_NAME`
+- image tag can be configured with `DOCKER_IMAGE_TAG`
 
 ### Recommended workflow
 
@@ -934,6 +940,33 @@ bash scripts/manage.sh start-docker
 bash scripts/manage.sh logs-docker
 bash scripts/manage.sh stop-docker
 ```
+
+### Push code vs push Docker image
+
+These are two different operations:
+
+#### Push code to GitHub
+Docker does not change how Git works. Even if you run the app with Docker, you still push source code normally:
+
+```bash
+bash scripts/manage.sh push-code "Your commit message"
+```
+
+#### Push Docker image to a registry
+If you want to publish the built container image, set these in `.env`:
+
+```env
+DOCKER_IMAGE_NAME=ghcr.io/lalitnayyar/pilangfuse
+DOCKER_IMAGE_TAG=latest
+```
+
+Then run:
+
+```bash
+bash scripts/manage.sh push-image
+```
+
+> Note: `.env` is intentionally ignored by git, so your secrets and private deployment settings are not pushed to GitHub.
 
 ### Deployment guide
 
