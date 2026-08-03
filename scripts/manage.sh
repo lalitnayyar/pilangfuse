@@ -65,7 +65,9 @@ serialize_env_value() {
 
 is_port_available() {
   local port="${1:?port is required}"
-  python - "$port" <<'PY'
+
+  if command -v python3 >/dev/null 2>&1; then
+    python3 - "$port" <<'PY'
 import socket, sys
 port = int(sys.argv[1])
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -77,6 +79,37 @@ except OSError:
 finally:
     sock.close()
 PY
+    return
+  fi
+
+  if command -v python >/dev/null 2>&1; then
+    python - "$port" <<'PY'
+import socket, sys
+port = int(sys.argv[1])
+sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+try:
+    sock.bind(("0.0.0.0", port))
+except OSError:
+    raise SystemExit(1)
+finally:
+    sock.close()
+PY
+    return
+  fi
+
+  if command -v ss >/dev/null 2>&1; then
+    ! ss -ltn "sport = :$port" | tail -n +2 | grep -q "."
+    return
+  fi
+
+  if command -v lsof >/dev/null 2>&1; then
+    ! lsof -iTCP:"$port" -sTCP:LISTEN >/dev/null 2>&1
+    return
+  fi
+
+  error "Cannot check port availability: install python3, ss, or lsof"
+  exit 1
 }
 
 find_available_port() {
