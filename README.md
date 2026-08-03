@@ -720,6 +720,45 @@ Best for:
 - quick research runs
 - terminal-first workflows
 
+### CLI Usage with Docker
+
+If you want to run the research workflow from the terminal using the Docker image instead of the local Node.js environment, you can do that too.
+
+#### Option A · One-off Docker run
+
+```bash
+docker build -t pilangfuse .
+docker run --rm --env-file .env -v "$(pwd)/reports:/app/reports" pilangfuse npm run research -- "AI agents for software engineering"
+```
+
+Use this when:
+- you want a clean one-off CLI run in a container
+- you do not want to install Node.js dependencies locally
+- you want the generated markdown saved into the local `reports/` directory
+
+#### Option B · One-off Docker Compose run
+
+```bash
+docker compose run --rm pilangfuse npm run research -- "AI agents for software engineering"
+```
+
+Use this when:
+- you already use `docker-compose.yml`
+- you want the CLI workflow to reuse the same service configuration and `.env`
+
+#### Option C · Run CLI inside an already running container
+
+If the Docker app is already running:
+
+```bash
+docker compose exec pilangfuse npm run research -- "AI agents for software engineering"
+```
+
+Notes:
+- CLI-only Docker runs do not need a browser port mapping
+- reports are still written to the mounted `reports/` directory
+- the same `.env` provider and Langfuse settings are used inside the container
+
 ---
 
 ## Web UI Usage
@@ -1098,10 +1137,22 @@ docker build -t pilangfuse .
 docker run --rm -p 3000:3000 --env-file .env -v "$(pwd)/reports:/app/reports" pilangfuse
 ```
 
+For CLI-only research runs in Docker, you can skip the port mapping and run:
+
+```bash
+docker run --rm --env-file .env -v "$(pwd)/reports:/app/reports" pilangfuse npm run research -- "AI agents for software engineering"
+```
+
 ### Option B · Run with Docker Compose
 
 ```bash
 docker compose up --build
+```
+
+For CLI-only research runs with Docker Compose, use:
+
+```bash
+docker compose run --rm pilangfuse npm run research -- "AI agents for software engineering"
 ```
 
 Then open:
