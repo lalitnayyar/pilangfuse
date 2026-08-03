@@ -113,6 +113,16 @@ the system will:
 
 ### 7. API + Browser UI
 - can be used as a script, service, or internal research dashboard
+- includes an in-app settings modal to edit `.env` values without leaving the UI
+- API keys are masked in the browser form, with show/hide toggles when you need to reveal them
+- includes copy-to-clipboard controls for environment values
+- includes a copy-visible-settings-as-env-block action
+- includes search/filter inside the settings modal
+- includes `.env` export and import actions directly in the UI
+- includes a Langfuse connection test button in the settings modal
+- includes a health-debug download action backed by `/api/health`
+- includes a reset-to-defaults action for managed settings
+- includes a Docker image list, selection dropdown, refresh action, and delete action from the UI
 
 ### 8. Docker-ready deployment
 - includes `Dockerfile`
@@ -481,16 +491,25 @@ If `WEB_SEARCH_PROVIDER=tavily` fails and `SERPAPI_API_KEY` exists, the workflow
 
 ## Langfuse Tracing
 
-Tracing is integrated at workflow and agent level.
+Tracing is integrated at workflow and agent level using the current Langfuse JS stack:
+- `@langfuse/tracing`
+- `@langfuse/otel`
+- `@langfuse/openai`
+- `@opentelemetry/sdk-trace-node`
+- `openai`
+
+### Startup setup
+At server startup the app registers a `LangfuseSpanProcessor` through `NodeTracerProvider` and exports traces in immediate mode so short-lived operations are less likely to be lost.
 
 ### Workflow trace
-The application creates a top-level trace for the whole research run.
+The application creates a top-level `topic-research-agents` observation for the whole research run.
 
 ### Agent spans
-The following spans are generated:
+The following observations are generated:
 - `agent1-web-search`
 - `agent2-youtube-search`
 - `agent3-report-writer`
+- `openai-report-generation` when LLM enhancement is enabled
 
 ### Trace metadata
 When available, metadata includes:
@@ -498,6 +517,23 @@ When available, metadata includes:
 - provider
 - model
 - pi session id
+- pi reasoning level
+- Langfuse base URL
+- recent workflow progress events
+- latest workflow progress status
+
+### Progress captured in traces
+Each workflow now pushes recent progress information into the top-level trace metadata so Langfuse shows more execution context while the job is running.
+
+Examples of trace-enriched progress information:
+- tracing enabled / disabled state
+- latest orchestrator step
+- recent agent progress events
+- flush status before buffered observations are sent to Langfuse
+- settings-popup connectivity test traces created from the Langfuse test button
+
+### OpenAI tracing
+When `OPENAI_API_KEY` is configured, report generation uses the official OpenAI JS SDK wrapped with Langfuse's `observeOpenAI(...)` helper. This records model calls as Langfuse generations without changing application behavior.
 
 ### If Langfuse credentials are missing
 The workflow still runs normally, but tracing is disabled.
@@ -513,6 +549,7 @@ The system emits professional step updates with emoji for easier readability.
 ```text
 10:12:01 | 🚀 Orchestrator   | START     | Research workflow started — Topic: AI agents for software engineering
 10:12:01 | 🧭 Orchestrator   | RUNNING   | Agents dispatched — Running web and video research in parallel
+10:12:01 | 🧬 Langfuse       | SUCCESS   | Tracing active — Base URL: https://cloud.langfuse.com
 10:12:02 | 🌐 Agent 1        | RUNNING   | Searching the web — Tavily attempt 1/3
 10:12:02 | 🎥 Agent 2        | RUNNING   | Searching YouTube — YouTube API attempt 1/3
 10:12:05 | ✅ Agent 1        | SUCCESS   | Web research completed — 5 sources collected
@@ -521,12 +558,14 @@ The system emits professional step updates with emoji for easier readability.
 10:12:08 | 📝 Agent 3        | RUNNING   | Report generation started — Building shareable markdown report
 10:12:09 | ✅ Agent 3        | SUCCESS   | Report ready — ai-agents-for-software-engineering-2026-08-03T10-12-09-000Z.md
 10:12:09 | 🎉 Orchestrator   | SUCCESS   | Workflow completed — /absolute/path/to/report.md
+10:12:09 | 🪄 Langfuse       | RUNNING   | Flushing trace — Sending buffered observations to Langfuse
 ```
 
 ### Common emoji meanings
 - `🚀` workflow start
 - `🧭` orchestration
 - `🧬` tracing
+- `🪄` Langfuse flush
 - `🌐` web research
 - `🎥` video research
 - `🔗` merge/hand-off
@@ -543,7 +582,7 @@ The system emits professional step updates with emoji for easier readability.
 ## Installation
 
 ### Prerequisites
-- Node.js 18+ recommended
+- Node.js 20+ recommended
 - API keys for your chosen providers
 
 ### Install dependencies
@@ -568,6 +607,10 @@ Default example:
 # Output / server
 OUTPUT_DIR=reports
 PORT=3000
+
+# Optional Docker image naming
+DOCKER_IMAGE_NAME=
+DOCKER_IMAGE_TAG=latest
 
 # Providers
 WEB_SEARCH_PROVIDER=tavily
@@ -600,6 +643,8 @@ LANGFUSE_BASE_URL=https://cloud.langfuse.com
 |---|---|
 | `OUTPUT_DIR` | Directory where markdown reports are saved |
 | `PORT` | API/UI server port |
+| `DOCKER_IMAGE_NAME` | Docker image name used for push/delete actions |
+| `DOCKER_IMAGE_TAG` | Docker image tag used for push/delete actions |
 | `WEB_SEARCH_PROVIDER` | Web provider: `tavily` or `serpapi` |
 | `VIDEO_SEARCH_PROVIDER` | Video provider: `youtube` or `serpapi` |
 | `ALLOW_PROVIDER_FALLBACK` | Enables fallback to alternate provider |
@@ -697,12 +742,59 @@ http://localhost:3000
 3. watch live activity cards appear
 4. view final collected links
 5. open the generated markdown report
+6. click **⚙️ Settings** anytime to open the in-app configuration modal
+7. edit `.env` values directly in the app and save them back to disk
+8. use **Show / Hide** on secret fields when you need to inspect an API key value
+9. use **Reset to Defaults** to load default values into the form before saving
+10. use **Copy** to copy any visible or hidden setting value to the clipboard
+11. use the search box to filter settings by variable name, label, group, or description
+12. export the current `.env` or import a replacement `.env` directly from the popup
+13. optionally refresh the local Docker image list, select an image, and delete it from the same modal
 
 The UI shows:
 - current job status
 - live event timeline
 - final output summary
 - direct link to the markdown file
+- local browser download for the generated markdown using `<topic>-<datetime>.md`
+- a popup settings modal for runtime configuration
+- masked but editable API key fields with reveal toggles
+- copy-to-clipboard controls
+- copy-all-visible-settings as an env block
+- search/filter controls
+- `.env` export/import controls
+- Langfuse test controls
+- downloadable health/Langfuse debug info
+- reset-to-defaults controls
+- local Docker image selection before delete
+
+### In-app settings modal
+
+The browser UI now includes a dedicated popup for environment management.
+
+What it does:
+- loads the current `.env` values from the running app
+- shows all managed environment variable names and editable values
+- masks API keys in password-style inputs
+- lets you reveal or hide secret values on demand
+- lets you copy setting values directly to the clipboard
+- lets you copy all currently visible settings as a single env block
+- provides search/filter across the settings list
+- provides export/import actions for `.env`
+- provides a Langfuse connection test button
+- provides a health-debug download action from `/api/health`
+- provides a reset-to-defaults button for all managed settings
+- saves changes back to `.env`
+- updates live runtime configuration for future requests
+- moves the app to the new port automatically if `PORT` changes
+- lists local Docker images from the server machine
+- lets you select a Docker image before deletion
+- can still fall back to `DOCKER_IMAGE_NAME` + `DOCKER_IMAGE_TAG` from the form when no local image is selected
+
+Notes:
+- provider, retry, OpenAI, Langfuse, output directory, and Docker image settings are editable from the modal
+- changing `PORT` redirects the browser to the new app port after save
+- Docker image listing and deletion require the Docker CLI on the machine running the app server
 
 Best for:
 - demos
@@ -794,6 +886,105 @@ This endpoint uses **Server-Sent Events (SSE)** and streams job activity in real
 GET /api/health
 ```
 
+Returns service health plus raw runtime/Langfuse debug information that can be downloaded from the settings modal as JSON. The response now also includes an automatic Langfuse region hint derived from `LANGFUSE_BASE_URL`.
+
+### 5. Read app settings
+
+```http
+GET /api/settings
+```
+
+Returns the editable environment settings currently loaded by the app.
+
+### 6. Test Langfuse connection
+
+```http
+POST /api/settings/langfuse/test
+```
+
+Creates a lightweight Langfuse test trace/span and flushes it so you can verify credentials and connectivity from the settings popup.
+
+### 7. Save app settings
+
+```http
+PUT /api/settings
+Content-Type: application/json
+```
+
+Body:
+
+```json
+{
+  "settings": {
+    "OPENAI_MODEL": "gpt-4.1-mini",
+    "WEB_SEARCH_PROVIDER": "tavily"
+  }
+}
+```
+
+This updates `.env` and applies the new values to the running application.
+
+### 8. Export current `.env`
+
+```http
+GET /api/settings/export
+```
+
+Downloads the current `.env` content from the application.
+
+### 9. Import `.env`
+
+```http
+POST /api/settings/import
+Content-Type: application/json
+```
+
+Body:
+
+```json
+{
+  "content": "PORT=3000\nWEB_SEARCH_PROVIDER=tavily\n..."
+}
+```
+
+This writes the provided `.env` content to disk and applies the managed settings to the running application.
+
+### 10. List local Docker images
+
+```http
+GET /api/docker/images
+```
+
+Returns the local Docker images available on the server so the UI can show a selection dropdown before deletion.
+
+### 11. Delete Docker image
+
+```http
+POST /api/docker/delete-image
+Content-Type: application/json
+```
+
+Delete by selected local image id:
+
+```json
+{
+  "imageId": "sha256:...",
+  "force": true
+}
+```
+
+Or delete by configured image name and tag:
+
+```json
+{
+  "imageName": "ghcr.io/lalitnayyar/pilangfuse",
+  "imageTag": "latest",
+  "force": true
+}
+```
+
+If `imageId`, `imageName`, and `imageTag` are omitted, the app falls back to `DOCKER_IMAGE_NAME` and `DOCKER_IMAGE_TAG` from `.env`.
+
 ---
 
 ## Management Script
@@ -823,6 +1014,10 @@ npm run manage
 - update repository + dependencies
 - push code to GitHub
 - push Docker image to a registry
+- delete Docker images from the management script with options
+- verify `LANGFUSE_BASE_URL` against a known Langfuse region
+- call the app's Langfuse test endpoint from the terminal
+- download the managed env values from a running Docker container
 - run health checks
 - open the UI in browser
 - run research from CLI
@@ -840,6 +1035,10 @@ bash scripts/manage.sh start-docker
 bash scripts/manage.sh status-docker
 bash scripts/manage.sh push-code "Update research workflow"
 bash scripts/manage.sh push-image
+bash scripts/manage.sh delete-image --name ghcr.io/lalitnayyar/pilangfuse --tag latest -y
+bash scripts/manage.sh langfuse-region eu
+bash scripts/manage.sh langfuse-test
+bash scripts/manage.sh download-env-docker
 bash scripts/manage.sh deploy
 bash scripts/manage.sh health
 bash scripts/manage.sh research "AI agents for software engineering"
@@ -940,6 +1139,125 @@ bash scripts/manage.sh start-docker
 bash scripts/manage.sh logs-docker
 bash scripts/manage.sh stop-docker
 ```
+
+### Delete a Docker image from the app
+
+Open the browser UI, click **⚙️ Settings**, then use the **Danger Zone** section.
+
+You can:
+- refresh the local Docker image list
+- select a local image from the dropdown before deleting it
+- or leave the selector on the configured form image
+
+Requirements:
+- either select a local image from the list, or set `DOCKER_IMAGE_NAME`
+- optionally set `DOCKER_IMAGE_TAG` (defaults to `latest`)
+- Docker CLI must be available on the machine running the app server
+
+This action removes the selected or configured local image directly through the application.
+
+### Delete Docker image with `manage.sh`
+
+You can delete a Docker image from the terminal using the configured `.env` values or explicit options.
+
+Examples:
+
+```bash
+# use DOCKER_IMAGE_NAME + DOCKER_IMAGE_TAG from .env
+bash scripts/manage.sh delete-image
+
+# delete by image name + tag
+bash scripts/manage.sh delete-image --name ghcr.io/lalitnayyar/pilangfuse --tag latest
+
+# delete by image id
+bash scripts/manage.sh delete-image --id sha256:abc123
+
+# skip confirmation
+bash scripts/manage.sh delete-image --name ghcr.io/lalitnayyar/pilangfuse --tag latest -y
+
+# do not force deletion
+bash scripts/manage.sh delete-image --name ghcr.io/lalitnayyar/pilangfuse --tag latest --no-force
+```
+
+Supported options:
+- `--name <image>`
+- `--tag <tag>`
+- `--id <image-id>`
+- `--force`
+- `--no-force`
+- `-y`, `--yes`
+
+If `--id` is provided it takes precedence over `--name` and `--tag`.
+
+### Run Langfuse test endpoint with `manage.sh`
+
+You can trigger the app's Langfuse connectivity check from the terminal.
+
+```bash
+bash scripts/manage.sh langfuse-test
+```
+
+Optional custom base URL for the running app:
+
+```bash
+bash scripts/manage.sh langfuse-test http://localhost:3000
+```
+
+This calls:
+
+```text
+POST /api/settings/langfuse/test
+```
+
+### Verify Langfuse region with `manage.sh`
+
+You can verify whether `LANGFUSE_BASE_URL` matches the expected managed Langfuse region.
+
+Examples:
+
+```bash
+# inspect configured base URL and detected region
+bash scripts/manage.sh langfuse-region
+
+# require EU region
+bash scripts/manage.sh langfuse-region eu
+
+# require US region
+bash scripts/manage.sh langfuse-region us
+```
+
+Supported region values:
+- `eu`
+- `us`
+- `jp`
+- `hipaa`
+- `custom`
+
+Known managed URLs:
+- `eu` → `https://cloud.langfuse.com`
+- `us` → `https://us.cloud.langfuse.com`
+- `jp` → `https://jp.cloud.langfuse.com`
+- `hipaa` → `https://hipaa.cloud.langfuse.com`
+
+### Download `.env` from Docker container with `manage.sh`
+
+If you want to reconstruct a local env file from a running Docker deployment, use:
+
+```bash
+bash scripts/manage.sh download-env-docker
+```
+
+Optional arguments:
+
+```bash
+bash scripts/manage.sh download-env-docker <container-name> <output-file>
+```
+
+Defaults:
+- container name: `pilangfuse`
+- output file: `.env.from-docker`
+
+This reads the managed environment variables from the running container and writes them to a local env file.
 
 ### Push code vs push Docker image
 

@@ -11,8 +11,12 @@
     "manage": "bash scripts/manage.sh"
   },
   "dependencies": {
+    "@langfuse/openai": "^5.10.0",
+    "@langfuse/otel": "^5.10.0",
+    "@langfuse/tracing": "^5.10.0",
+    "@opentelemetry/sdk-trace-node": "^2.1.0",
     "dotenv": "^16.4.5",
     "express": "^4.21.0",
-    "langfuse": "^3.0.0"
+    "openai": "^7.3.0"
   }
 }

@@ -46,6 +46,131 @@ load_env_file() {
   fi
 }
 
+serialize_env_value() {
+  local value="${1-}"
+
+  if [[ -z "$value" ]]; then
+    printf ""
+  elif [[ "$value" =~ ^[A-Za-z0-9_./:@-]+$ ]]; then
+    printf '%s' "$value"
+  else
+    value="${value//\\/\\\\}"
+    value="${value//\"/\\\"}"
+    value="${value//$'\n'/\\n}"
+    value="${value//$'\r'/\\r}"
+    printf '"%s"' "$value"
+  fi
+}
+
+detect_langfuse_region() {
+  local base_url="${1:-}"
+  case "$base_url" in
+    https://cloud.langfuse.com) printf 'eu' ;;
+    https://us.cloud.langfuse.com) printf 'us' ;;
+    https://jp.cloud.langfuse.com) printf 'jp' ;;
+    https://hipaa.cloud.langfuse.com) printf 'hipaa' ;;
+    *) printf 'custom' ;;
+  esac
+}
+
+verify_langfuse_region() {
+  ensure_env
+  load_env_file
+
+  local expected_region="${1:-}"
+  local base_url="${LANGFUSE_BASE_URL:-https://cloud.langfuse.com}"
+  local detected_region
+  detected_region="$(detect_langfuse_region "$base_url")"
+
+  step "Checking Langfuse base URL"
+  info "LANGFUSE_BASE_URL=$base_url"
+  info "Detected region: $detected_region"
+
+  if [[ -z "${LANGFUSE_PUBLIC_KEY:-}" || -z "${LANGFUSE_SECRET_KEY:-}" ]]; then
+    warn "Langfuse keys are not fully configured in .env"
+  else
+    success "Langfuse keys are present in .env"
+  fi
+
+  if [[ "$detected_region" == "custom" ]]; then
+    warn "Base URL does not match a known managed Langfuse region"
+    info "Known regions: eu=https://cloud.langfuse.com us=https://us.cloud.langfuse.com jp=https://jp.cloud.langfuse.com hipaa=https://hipaa.cloud.langfuse.com"
+  fi
+
+  if [[ -n "$expected_region" ]]; then
+    case "$expected_region" in
+      eu|us|jp|hipaa|custom) ;;
+      *)
+        error "Unsupported Langfuse region: $expected_region"
+        info "Supported regions: eu, us, jp, hipaa, custom"
+        exit 1
+        ;;
+    esac
+
+    if [[ "$detected_region" == "$expected_region" ]]; then
+      success "LANGFUSE_BASE_URL matches expected region: $expected_region"
+    else
+      error "LANGFUSE_BASE_URL region mismatch. Expected '$expected_region' but detected '$detected_region'"
+      exit 1
+    fi
+  fi
+}
+
+langfuse_test() {
+  local url="${1:-$DEFAULT_URL}/api/settings/langfuse/test"
+  step "Calling Langfuse test endpoint: $url"
+
+  if ! command -v curl >/dev/null 2>&1; then
+    error "curl is required for langfuse-test"
+    exit 1
+  fi
+
+  local response
+  response="$(curl -fsS -X POST "$url")"
+  printf '%s\n' "$response"
+  success "Langfuse test endpoint completed"
+}
+
+download_env_docker() {
+  local container_name="${1:-$APP_NAME}"
+  local output_file="${2:-.env.from-docker}"
+
+  if ! command -v docker >/dev/null 2>&1; then
+    error "Docker CLI is not installed"
+    exit 1
+  fi
+
+  if ! docker ps --format '{{.Names}}' | grep -qx "$container_name"; then
+    error "Container '$container_name' is not running"
+    info "Tip: start Docker first with 'bash scripts/manage.sh start-docker'"
+    exit 1
+  fi
+
+  if [[ ! -f .env.example ]]; then
+    error ".env.example not found"
+    exit 1
+  fi
+
+  local -a env_keys=()
+  mapfile -t env_keys < <(awk -F= '/^[A-Z0-9_]+=/{print $1}' .env.example)
+
+  if [[ ${#env_keys[@]} -eq 0 ]]; then
+    error "No environment keys found in .env.example"
+    exit 1
+  fi
+
+  step "Downloading environment values from Docker container: $container_name"
+  : > "$output_file"
+
+  local key value
+  for key in "${env_keys[@]}"; do
+    value="$(docker exec "$container_name" /bin/sh -lc "printenv '$key' || true" | tr -d '\r')"
+    printf '%s=%s\n' "$key" "$(serialize_env_value "$value")" >> "$output_file"
+  done
+
+  success "Saved container environment to $output_file"
+}
+
 install_app() {
   step "Installing Node.js dependencies"
   npm install
@@ -188,6 +313,94 @@ push_docker_image() {
   success "Docker image pushed: ${image_name}:${image_tag}"
 }
 
+delete_docker_image() {
+  ensure_env
+  load_env_file
+
+  local image_name="${DOCKER_IMAGE_NAME:-}"
+  local image_tag="${DOCKER_IMAGE_TAG:-latest}"
+  local image_id=""
+  local force="true"
+  local auto_yes="false"
+
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --name)
+        image_name="${2:-}"
+        shift 2
+        ;;
+      --tag)
+        image_tag="${2:-latest}"
+        shift 2
+        ;;
+      --id)
+        image_id="${2:-}"
+        shift 2
+        ;;
+      --force)
+        force="true"
+        shift
+        ;;
+      --no-force)
+        force="false"
+        shift
+        ;;
+      -y|--yes)
+        auto_yes="true"
+        shift
+        ;;
+      *)
+        error "Unknown delete-image option: $1"
+        info "Usage: bash scripts/manage.sh delete-image [--name <image>] [--tag <tag>] [--id <image-id>] [--force|--no-force] [-y|--yes]"
+        exit 1
+        ;;
+    esac
+  done
+
+  if ! command -v docker >/dev/null 2>&1; then
+    error "Docker CLI is not installed"
+    exit 1
+  fi
+
+  local target=""
+  if [[ -n "$image_id" ]]; then
+    target="$image_id"
+  elif [[ -n "$image_name" ]]; then
+    target="${image_name}:${image_tag}"
+  else
+    error "No Docker image target provided"
+    info "Use --id <image-id> or set DOCKER_IMAGE_NAME / pass --name"
+    exit 1
+  fi
+
+  if ! docker image inspect "$target" >/dev/null 2>&1; then
+    error "Docker image not found: $target"
+    exit 1
+  fi
+
+  if [[ "$auto_yes" != "true" ]]; then
+    local answer
+    read -r -p "Delete Docker image '$target'? [y/N]: " answer
+    case "$answer" in
+      y|Y|yes|YES) ;;
+      *)
+        warn "Deletion cancelled"
+        return 0
+        ;;
+    esac
+  fi
+
+  local -a cmd=(docker image rm)
+  if [[ "$force" == "true" ]]; then
+    cmd+=(--force)
+  fi
+  cmd+=("$target")
+
+  step "Deleting Docker image: $target"
+  "${cmd[@]}"
+  success "Docker image deleted: $target"
+}
+
 start_docker() {
   ensure_env
   local dc
@@ -316,6 +529,10 @@ Commands:
   update                Pull latest code and install dependencies
   push-code [message]   Git add, commit, and push to origin/main
   push-image            Build and push Docker image from docker-compose
+  delete-image          Delete a Docker image by env config, image name/tag, or image id
+  langfuse-region       Verify LANGFUSE_BASE_URL against a known region
+  langfuse-test         Call the app's Langfuse test endpoint
+  download-env-docker   Download app env values from a running Docker container
   health [url]          Check /api/health
   open [url]            Open the application in browser
   research [topic]      Run CLI research workflow
@@ -347,11 +564,15 @@ interactive_menu() {
     printf "15) Update repository + dependencies\n"
     printf "16) Push code to GitHub\n"
     printf "17) Push Docker image\n"
-    printf "18) Health check\n"
-    printf "19) Open UI\n"
-    printf "20) Run research from CLI\n"
-    printf "21) Backup reports\n"
-    printf "22) Clean runtime state\n"
+    printf "18) Delete Docker image\n"
+    printf "19) Verify Langfuse region\n"
+    printf "20) Run Langfuse test endpoint\n"
+    printf "21) Download env from Docker container\n"
+    printf "22) Health check\n"
+    printf "23) Open UI\n"
+    printf "24) Run research from CLI\n"
+    printf "25) Backup reports\n"
+    printf "26) Clean runtime state\n"
     printf "0) Exit\n"
     read -r -p "Select an option: " choice
 
@@ -373,11 +594,15 @@ interactive_menu() {
       15) update_app ;;
       16) push_code ;;
       17) push_docker_image ;;
-      18) health_check ;;
-      19) open_ui ;;
-      20) run_research ;;
-      21) backup_reports ;;
-      22) clean_runtime ;;
+      18) delete_docker_image ;;
+      19) verify_langfuse_region ;;
+      20) langfuse_test ;;
+      21) download_env_docker ;;
+      22) health_check ;;
+      23) open_ui ;;
+      24) run_research ;;
+      25) backup_reports ;;
+      26) clean_runtime ;;
       0) exit 0 ;;
       *) warn "Invalid option" ;;
     esac
@@ -407,6 +632,10 @@ case "$command" in
   update) update_app ;;
   push-code) push_code "$@" ;;
   push-image) push_docker_image ;;
+  delete-image) delete_docker_image "$@" ;;
+  langfuse-region) verify_langfuse_region "$@" ;;
+  langfuse-test) langfuse_test "$@" ;;
+  download-env-docker) download_env_docker "$@" ;;
   health) health_check "$@" ;;
   open) open_ui "$@" ;;
   research) run_research "$@" ;;
