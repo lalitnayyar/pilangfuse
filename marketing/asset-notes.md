@@ -1,16 +1,19 @@
 # Marketing assets created
 
-## Screenshots captured
+## Product screenshots
 
 - `docs/assets/marketing/pilangfuse-home.png`
 - `docs/assets/marketing/pilangfuse-completed-workflow.png`
 - `docs/assets/marketing/pilangfuse-settings.png`
 
-## Langfuse URLs referenced
+## Langfuse screenshots
 
-- Dashboard: `http://187.124.130.193:3000/project/cmsd0u5i40006qg06kl9wxycv`
-- Traces: `http://187.124.130.193:3000/project/cmsd0u5i40006qg06kl9wxycv/traces`
+- `docs/assets/marketing/langfusedashboard.png`
+- `docs/assets/marketing/langfusetracing.png`
+- `docs/assets/marketing/langfusetraceinteraction.png`
 
-## Note
+## URLs referenced
 
-Those Langfuse URLs currently render a sign-in page from this environment, so authenticated dashboard/traces screenshots were not captured here.
+- Live app: `http://187.124.130.193:8300/`
+- Langfuse dashboard: `http://187.124.130.193:3000/project/cmsd0u5i40006qg06kl9wxycv`
+- Langfuse traces: `http://187.124.130.193:3000/project/cmsd0u5i40006qg06kl9wxycv/traces`

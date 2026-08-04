@@ -81,7 +81,7 @@ What stands out here is the simplicity.
 A business user does not need to understand orchestration, prompts, or tracing infrastructure.
 They just enter a topic and run the workflow.
 
-That simplicity is powerful in sales conversations.
+That simplicity is powerful in sales conversations because it removes the intimidation factor that many AI systems create.
 
 ---
 
@@ -110,7 +110,80 @@ That combination makes the product easy to position for:
 
 ---
 
-## Screenshot 3: built for operators, not just end users
+## Screenshot 3: Langfuse dashboard makes the workflow measurable
+
+![Langfuse dashboard](../docs/assets/marketing/langfusedashboard.png)
+
+*Langfuse home dashboard for the project showing trace volume, model costs, and observation activity.*
+
+This is one of the most important differences between an AI demo and an AI product.
+
+A demo gives you output.
+A product gives you **visibility**.
+
+In the Langfuse dashboard, the team can quickly understand:
+- how many traces are being captured
+- how much model usage is costing
+- how many observations the workflow generates
+- which project environment is active
+- whether usage is growing or stable over time
+
+That matters in real buying conversations because decision makers want to know that they are not adopting a black box.
+They want a system they can inspect, govern, and optimize.
+
+---
+
+## Screenshot 4: trace list makes every run inspectable
+
+![Langfuse tracing overview](../docs/assets/marketing/langfusetracing.png)
+
+*Tracing view showing root workflow traces, agent spans, generation events, timestamps, input payloads, and outputs.*
+
+This is where observability becomes practical.
+
+Instead of guessing what the multi-agent system did, the team can see:
+- each workflow run
+- each agent span
+- each model generation
+- exact start times
+- inputs and outputs for each step
+- the distinction between root workflow traces and child observations
+
+For engineering and operations teams, this is the trust layer.
+It answers the question:
+
+> “If something looks wrong, can we actually inspect the run?”
+
+With Langfuse, the answer is yes.
+
+---
+
+## Screenshot 5: deep trace detail turns AI behavior into something understandable
+
+![Langfuse trace interaction detail](../docs/assets/marketing/langfusetraceinteraction.png)
+
+*Detailed trace interaction view showing the report generation step, prompt structure, parameters, latency, token usage, and source payloads.*
+
+This screenshot is especially useful for technical buyers.
+
+It shows that pilangfuse is not merely logging a success/failure event. It is capturing rich execution detail such as:
+- the exact generation step
+- latency
+- environment
+- model selection
+- token counts and completion size
+- prompt and instruction structure
+- the structured payload passed into report generation
+
+That level of detail makes the workflow:
+- easier to debug
+- easier to optimize
+- easier to explain to internal stakeholders
+- more credible for production use
+
+---
+
+## Screenshot 6: built for operators, not just end users
 
 ![pilangfuse settings modal](../docs/assets/marketing/pilangfuse-settings.png)
 
@@ -140,6 +213,7 @@ With Langfuse integrated into the workflow, teams can inspect:
 - per-agent behavior
 - workflow timing
 - metadata around runs
+- model usage and costs
 - debugging context for failures or slow steps
 
 That matters because AI buyers increasingly ask for governance, reliability, and debuggability before they approve broader rollout.
@@ -150,23 +224,7 @@ So the value proposition is not only:
 
 It is also:
 
-> “We can show you exactly how the workflow ran.”
-
----
-
-## Langfuse references for the article
-
-Use these authenticated links when publishing the final version with observability screenshots:
-
-- **Langfuse traces:** http://187.124.130.193:3000/project/cmsd0u5i40006qg06kl9wxycv/traces
-- **Langfuse dashboard:** http://187.124.130.193:3000/project/cmsd0u5i40006qg06kl9wxycv
-
-> Note: from this environment, those URLs currently present a sign-in screen, so I included the live product screenshots above and left these Langfuse links ready for authenticated screenshot replacement if needed.
-
-Suggested caption once Langfuse screenshots are added:
-
-**Langfuse dashboard:** “Operational visibility across runs helps teams trust and improve the workflow.”  
-**Langfuse traces:** “Trace-level observability makes multi-agent execution understandable and debuggable.”
+> “We can show you exactly how the workflow ran, what it cost, and how to improve it.”
 
 ---
 
@@ -235,12 +293,5 @@ If you are exploring:
 pilangfuse is a strong example of how to package that into something demoable, understandable, and commercially useful.
 
 **Live app:** http://187.124.130.193:8300/  
-**Langfuse project:** http://187.124.130.193:3000/project/cmsd0u5i40006qg06kl9wxycv  
+**Langfuse dashboard:** http://187.124.130.193:3000/project/cmsd0u5i40006qg06kl9wxycv  
 **Langfuse traces:** http://187.124.130.193:3000/project/cmsd0u5i40006qg06kl9wxycv/traces
-
-If you want, I can also turn this into:
-- a shorter LinkedIn post version
-- a founder-style launch post
-- a landing page headline/subheadline set
-- a sales one-pager
-- website copy for the product page

@@ -71,7 +71,7 @@ That is what turns AI capability into a sellable product.
 
 ---
 
-## Screenshot: the workflow buyers understand immediately
+## Screenshot 1: product proof in a single screen
 
 ![pilangfuse completed workflow](../docs/assets/marketing/pilangfuse-completed-workflow.png)
 
@@ -88,6 +88,79 @@ This screen shows:
 - the deliverable is ready to share
 
 That is a much stronger story than “the model responded well.”
+
+---
+
+## Screenshot 2: Langfuse dashboard proves this is not a black box
+
+![Langfuse dashboard](../docs/assets/marketing/langfusedashboard.png)
+
+*Dashboard view showing total traces, model cost, and observation activity across the project.*
+
+This is what separates productized AI from AI theater.
+
+A serious buyer wants to know:
+- Is usage visible?
+- Can we measure cost?
+- Can we see operational activity over time?
+- Is there an audit trail for runs?
+
+The Langfuse dashboard answers all four.
+
+It gives teams a fast operational summary of how the workflow is behaving in the real world. That makes the product easier to trust, easier to manage, and easier to justify internally.
+
+---
+
+## Screenshot 3: the tracing table is where trust gets built
+
+![Langfuse tracing overview](../docs/assets/marketing/langfusetracing.png)
+
+*Trace list showing workflow runs, agent spans, generation steps, timestamps, and structured inputs/outputs.*
+
+This is where deals get stronger.
+
+Because when a buyer asks:
+
+> “If something goes wrong, can we inspect what happened?”
+
+You can point to a real tracing system, not a vague promise.
+
+In this view, teams can inspect:
+- root traces for each workflow run
+- child spans for each agent step
+- model generations
+- timestamps and execution flow
+- serialized inputs and outputs
+- filterable slices of behavior across runs
+
+That is the kind of evidence buyers remember.
+
+---
+
+## Screenshot 4: trace-level detail supports optimization and governance
+
+![Langfuse trace interaction detail](../docs/assets/marketing/langfusetraceinteraction.png)
+
+*Detailed trace interaction for report generation with latency, model, token usage, prompt structure, and payload inspection.*
+
+This screenshot matters because it shows that pilangfuse is not just monitorable at a high level. It is inspectable at the exact point where the LLM creates value.
+
+A team can review:
+- prompt structure
+- model choice
+- response configuration
+- token consumption
+- latency
+- source payloads feeding the final report
+
+That makes the product better for:
+- debugging
+- optimization
+- cost control
+- quality review
+- internal governance
+
+And those are exactly the categories that turn a pilot into a production rollout.
 
 ---
 
@@ -126,8 +199,10 @@ With Langfuse, pilangfuse gives teams the ability to understand:
 - trace-level execution
 - workflow timing
 - per-agent behavior
+- prompt and payload structure
 - debugging context
 - failure visibility
+- cost and token usage
 
 That is a real differentiator.
 
@@ -184,7 +259,7 @@ That is the difference.
 And that is why pilangfuse matters.
 
 **Live app:** http://187.124.130.193:8300/  
-**Langfuse project:** http://187.124.130.193:3000/project/cmsd0u5i40006qg06kl9wxycv  
+**Langfuse dashboard:** http://187.124.130.193:3000/project/cmsd0u5i40006qg06kl9wxycv  
 **Langfuse traces:** http://187.124.130.193:3000/project/cmsd0u5i40006qg06kl9wxycv/traces
 
 #AI #AIAgents #Langfuse #Observability #ProductEngineering #DeveloperTools #EnterpriseAI

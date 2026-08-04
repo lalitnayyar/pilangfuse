@@ -41,6 +41,27 @@ It was to create a workflow that people could understand, trust, and operate.
 
 ---
 
+## The product experience I wanted users to feel
+
+![pilangfuse completed workflow](../docs/assets/marketing/pilangfuse-completed-workflow.png)
+
+*One completed run showing live activity, workflow completion, and the final research brief.*
+
+This screen captures a lot of what I wanted the product to feel like.
+
+Not flashy for the sake of being flashy.
+Not overloaded.
+Just clear:
+- here is the task
+- here is the workflow status
+- here is what the agents did
+- here is the final output
+
+That clarity is important to me.
+Because good AI products should reduce uncertainty, not add to it.
+
+---
+
 ## Why I cared about observability from the beginning
 
 One of the biggest gaps in AI products is that they often feel like black boxes.
@@ -68,24 +89,77 @@ That matters a lot if you want AI systems to move beyond experiments.
 
 ---
 
-## Screenshot: what the product became
+## Seeing the dashboard made the idea feel real
 
-![pilangfuse completed workflow](../docs/assets/marketing/pilangfuse-completed-workflow.png)
+![Langfuse dashboard](../docs/assets/marketing/langfusedashboard.png)
 
-*One completed run showing live activity, workflow completion, and the final research brief.*
+*Project dashboard showing traces, model costs, and observation activity.*
 
-This screen captures a lot of what I wanted the product to feel like.
+This kind of screen matters more than people think.
 
-Not flashy for the sake of being flashy.
-Not overloaded.
-Just clear:
-- here is the task
-- here is the workflow status
-- here is what the agents did
-- here is the final output
+It changes the product from something that merely produces output into something that a team can actually monitor.
 
-That clarity is important to me.
-Because good AI products should reduce uncertainty, not add to it.
+You can look at it and immediately understand:
+- that real traces are being captured
+- that model activity has a measurable footprint
+- that runs create observable events over time
+- that the workflow is not disappearing into a void
+
+For me, that was an important product moment.
+
+It meant the system was not just doing work. It was becoming explainable.
+
+---
+
+## The trace list is where the black box starts to disappear
+
+![Langfuse tracing overview](../docs/assets/marketing/langfusetracing.png)
+
+*Tracing view showing workflow runs, agent spans, generation events, and structured inputs and outputs.*
+
+This screenshot is probably the clearest expression of what I wanted from the product.
+
+Not just “AI happened.”
+But:
+- this workflow ran at this time
+- these steps were executed
+- these agent spans were created
+- these payloads moved through the system
+- these outputs came back
+
+That kind of visibility is incredibly grounding when you are building with multiple agents.
+
+It makes the product easier to debug, easier to improve, and easier to trust.
+
+---
+
+## The trace detail is where learning happens
+
+![Langfuse trace interaction detail](../docs/assets/marketing/langfusetraceinteraction.png)
+
+*Detailed trace view for the report generation step with latency, model configuration, token usage, and source payloads.*
+
+I especially like this view because it shows the part of AI products that often stays hidden.
+
+Here, you can inspect the report generation itself:
+- the system instruction
+- the user payload
+- the selected model
+- latency
+- token counts
+- the structured context passed into the final step
+
+That is not just useful for debugging.
+It is useful for product thinking.
+
+When you can see the shape of the work so clearly, you start asking better questions:
+- Is this the right prompt structure?
+- Are we passing the right context?
+- Is the cost justified?
+- Can we simplify the workflow?
+- Where is quality gained or lost?
+
+That is where iteration becomes much more intentional.
 
 ---
 
@@ -131,20 +205,6 @@ AI becomes much more valuable when it is packaged as a workflow people can actua
 
 ---
 
-## Who I think this is for
-
-I see pilangfuse as relevant for:
-- teams exploring multi-agent applications
-- product builders thinking about AI workflow UX
-- engineering teams that care about observability
-- consultants packaging repeatable AI solutions
-- internal innovation teams looking for practical examples
-
-It is also a useful reminder that AI tooling does not need to start with giant ambitions.
-Sometimes the right move is to take one valuable task and make it dramatically more usable.
-
----
-
 ## Why I’m sharing it
 
 I’m sharing pilangfuse because I think we need more examples of AI products that bridge the gap between:
@@ -173,7 +233,7 @@ It is:
 That is the question behind pilangfuse.
 
 **Live app:** http://187.124.130.193:8300/  
-**Langfuse project:** http://187.124.130.193:3000/project/cmsd0u5i40006qg06kl9wxycv  
+**Langfuse dashboard:** http://187.124.130.193:3000/project/cmsd0u5i40006qg06kl9wxycv  
 **Langfuse traces:** http://187.124.130.193:3000/project/cmsd0u5i40006qg06kl9wxycv/traces
 
 #AI #AIAgents #Langfuse #Observability #FounderStory #ProductBuilding #DeveloperTools
