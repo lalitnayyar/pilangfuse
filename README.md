@@ -1,4 +1,4 @@
-# pilangfuse
+# TraceBreif AI
 
 [![CI](https://github.com/lalitnayyar/pilangfuse/actions/workflows/ci.yml/badge.svg)](https://github.com/lalitnayyar/pilangfuse/actions/workflows/ci.yml)
 ![Node 22+](https://img.shields.io/badge/node-22%2B-3C873A)
