@@ -9,7 +9,7 @@ They want workflows that are:
 - repeatable
 - easy to operate
 
-That is why I built **pilangfuse**.
+That is why I built **TraceBrief AI**.
 
 It is a **Langfuse-traced multi-agent research workflow** that turns one topic into:
 - curated web research
@@ -19,7 +19,7 @@ It is a **Langfuse-traced multi-agent research workflow** that turns one topic i
 - traceable execution for debugging and trust
 
 ### What the user sees
-![pilangfuse completed workflow](../docs/assets/marketing/pilangfuse-completed-workflow.png)
+![TraceBrief AI completed workflow](../docs/assets/marketing/pilangfuse-completed-workflow.png)
 
 The app makes the workflow easy to understand:
 - start with one topic

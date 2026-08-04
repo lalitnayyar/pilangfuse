@@ -20,17 +20,17 @@ Because once you move beyond novelty, people start asking better questions:
 
 Those questions stayed with me.
 
-That is what led me to build **pilangfuse**.
+That is what led me to build **TraceBrief AI**.
 
 ---
 
-## The idea behind pilangfuse
+## The idea behind TraceBrief AI
 
 I wanted to create something that felt closer to a real product than a model demo.
 
 Something that could take a practical task — in this case, topic research — and turn it into a repeatable workflow with visible execution and a usable output.
 
-So pilangfuse became a **3-agent research system**:
+So TraceBrief AI became a **3-agent research system**:
 
 - a **Web Research Agent** to gather relevant sources
 - a **Video Research Agent** to gather YouTube references
@@ -43,7 +43,7 @@ It was to create a workflow that people could understand, trust, and operate.
 
 ## The product experience I wanted users to feel
 
-![pilangfuse completed workflow](../docs/assets/marketing/pilangfuse-completed-workflow.png)
+![TraceBrief AI completed workflow](../docs/assets/marketing/pilangfuse-completed-workflow.png)
 
 *One completed run showing live activity, workflow completion, and the final research brief.*
 
@@ -71,7 +71,7 @@ Something comes out.
 And when it works, everyone is happy.
 But when it fails, slows down, or behaves unpredictably, nobody knows where to look.
 
-That is why I integrated **Langfuse tracing** into pilangfuse.
+That is why I integrated **Langfuse tracing** into TraceBrief AI.
 
 I wanted every run to feel less mysterious.
 Not just for developers, but for anyone evaluating whether the workflow was good enough to trust.
@@ -197,7 +197,7 @@ It also needs:
 - a clear user experience
 - practical delivery
 
-That is what I tried to put into pilangfuse.
+That is what I tried to put into TraceBrief AI.
 
 Not because research automation is the only use case that matters, but because it is a good example of a broader pattern:
 
@@ -207,7 +207,7 @@ AI becomes much more valuable when it is packaged as a workflow people can actua
 
 ## Why I’m sharing it
 
-I’m sharing pilangfuse because I think we need more examples of AI products that bridge the gap between:
+I’m sharing TraceBrief AI because I think we need more examples of AI products that bridge the gap between:
 - model capability
 - and operational usability
 
@@ -230,7 +230,7 @@ It is:
 
 > “What workflow can we make trustworthy, useful, and easy to adopt?”
 
-That is the question behind pilangfuse.
+That is the question behind TraceBrief AI.
 
 **Live app:** http://187.124.130.193:8300/  
 **Langfuse dashboard:** http://187.124.130.193:3000/project/cmsd0u5i40006qg06kl9wxycv  

@@ -10,9 +10,9 @@ What buyers want now is simple:
 
 **Give me an AI product that solves a real task, shows me what happened, and fits into how my team actually works.**
 
-That is exactly why I built **pilangfuse**.
+That is exactly why I built **TraceBrief AI**.
 
-pilangfuse is a **Langfuse-traced multi-agent research workflow** that turns a single topic into:
+TraceBrief AI is a **Langfuse-traced multi-agent research workflow** that turns a single topic into:
 - curated web research
 - relevant YouTube references
 - a polished markdown brief
@@ -45,11 +45,11 @@ Because once a buyer asks:
 
 …the room gets quiet.
 
-pilangfuse was built to answer those questions before they are even asked.
+TraceBrief AI was built to answer those questions before they are even asked.
 
 ---
 
-## What pilangfuse does
+## What TraceBrief AI does
 
 A user enters one topic.
 
@@ -73,7 +73,7 @@ That is what turns AI capability into a sellable product.
 
 ## Screenshot 1: product proof in a single screen
 
-![pilangfuse completed workflow](../docs/assets/marketing/pilangfuse-completed-workflow.png)
+![TraceBrief AI completed workflow](../docs/assets/marketing/pilangfuse-completed-workflow.png)
 
 *One screen shows execution, status, sources, output, and delivery.*
 
@@ -143,7 +143,7 @@ That is the kind of evidence buyers remember.
 
 *Detailed trace interaction for report generation with latency, model, token usage, prompt structure, and payload inspection.*
 
-This screenshot matters because it shows that pilangfuse is not just monitorable at a high level. It is inspectable at the exact point where the LLM creates value.
+This screenshot matters because it shows that TraceBrief AI is not just monitorable at a high level. It is inspectable at the exact point where the LLM creates value.
 
 A team can review:
 - prompt structure
@@ -166,7 +166,7 @@ And those are exactly the categories that turn a pilot into a production rollout
 
 ## Why this is commercially valuable
 
-If you sell into product, research, engineering, enablement, or innovation teams, pilangfuse solves a real pain point:
+If you sell into product, research, engineering, enablement, or innovation teams, TraceBrief AI solves a real pain point:
 
 ### 1. Faster research delivery
 Teams can move from topic to structured brief in minutes.
@@ -195,7 +195,7 @@ They no longer just ask:
 They ask:
 > Can we trust it, inspect it, and improve it?
 
-With Langfuse, pilangfuse gives teams the ability to understand:
+With Langfuse, TraceBrief AI gives teams the ability to understand:
 - trace-level execution
 - workflow timing
 - per-agent behavior
@@ -216,7 +216,7 @@ Because the moment you can say:
 
 ## Who should buy this kind of product
 
-pilangfuse is a strong fit for:
+TraceBrief AI is a strong fit for:
 - **AI consulting firms** packaging repeatable client workflows
 - **product teams** doing fast market and technical research
 - **content and devrel teams** building source-backed briefs
@@ -245,7 +245,7 @@ They will be the teams that package AI into:
 - useful outputs
 - deployable systems
 
-That is the category pilangfuse is built for.
+That is the category TraceBrief AI is built for.
 
 ---
 
@@ -256,7 +256,7 @@ If you are still selling “AI that can chat,” you are competing in a crowded 
 If you are selling **observable AI workflows that complete real tasks**, you are selling something buyers can justify, pilot, and expand.
 
 That is the difference.
-And that is why pilangfuse matters.
+And that is why TraceBrief AI matters.
 
 **Live app:** http://187.124.130.193:8300/  
 **Langfuse dashboard:** http://187.124.130.193:3000/project/cmsd0u5i40006qg06kl9wxycv  

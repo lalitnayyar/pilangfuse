@@ -1,4 +1,4 @@
-# From prompt demos to buyer-ready AI workflows: why I built pilangfuse
+# From prompt demos to buyer-ready AI workflows: why I built TraceBrief AI
 
 Most AI demos look impressive for 30 seconds.
 
@@ -13,9 +13,9 @@ But the moment a serious buyer asks:
 
 …most demos fall apart.
 
-That is exactly the gap **pilangfuse** is designed to solve.
+That is exactly the gap **TraceBrief AI** is designed to solve.
 
-**pilangfuse** is a Langfuse-traced, multi-agent research workflow that turns a single topic into:
+**TraceBrief AI** is a Langfuse-traced, multi-agent research workflow that turns a single topic into:
 - curated web research
 - relevant YouTube references
 - a polished markdown brief
@@ -58,7 +58,7 @@ They want systems that are:
 - **easy to demo internally**
 - **simple for non-technical users to run**
 
-pilangfuse helps teams go from:
+TraceBrief AI helps teams go from:
 
 > “Let me research this topic for you…”
 
@@ -72,7 +72,7 @@ That shift is what makes the product commercially interesting.
 
 ## Screenshot 1: live product experience
 
-![pilangfuse home screen](../docs/assets/marketing/pilangfuse-home.png)
+![TraceBrief AI home screen](../docs/assets/marketing/pilangfuse-home.png)
 
 *Live app: clean entry point for topic-driven research workflows.*
 
@@ -87,7 +87,7 @@ That simplicity is powerful in sales conversations because it removes the intimi
 
 ## Screenshot 2: completed workflow with output
 
-![pilangfuse completed workflow](../docs/assets/marketing/pilangfuse-completed-workflow.png)
+![TraceBrief AI completed workflow](../docs/assets/marketing/pilangfuse-completed-workflow.png)
 
 *Example run: live activity timeline, workflow completion, and final research brief in one screen.*
 
@@ -166,7 +166,7 @@ With Langfuse, the answer is yes.
 
 This screenshot is especially useful for technical buyers.
 
-It shows that pilangfuse is not merely logging a success/failure event. It is capturing rich execution detail such as:
+It shows that TraceBrief AI is not merely logging a success/failure event. It is capturing rich execution detail such as:
 - the exact generation step
 - latency
 - environment
@@ -185,7 +185,7 @@ That level of detail makes the workflow:
 
 ## Screenshot 6: built for operators, not just end users
 
-![pilangfuse settings modal](../docs/assets/marketing/pilangfuse-settings.png)
+![TraceBrief AI settings modal](../docs/assets/marketing/pilangfuse-settings.png)
 
 *Built-in settings management makes the workflow easier to operate, test, and deploy.*
 
@@ -199,7 +199,7 @@ It is not enough to generate output. Teams also need to manage:
 - Langfuse connectivity
 - deployment configuration
 
-This makes pilangfuse more than a nice demo UI. It becomes a practical internal tool teams can actually run.
+This makes TraceBrief AI more than a nice demo UI. It becomes a practical internal tool teams can actually run.
 
 ---
 
@@ -230,7 +230,7 @@ It is also:
 
 ## Commercial positioning
 
-If I were positioning pilangfuse in market, I would frame it like this:
+If I were positioning TraceBrief AI in market, I would frame it like this:
 
 ### 1. AI research copilot for teams
 Turn one topic into a structured brief with sources and video references in minutes.
@@ -248,7 +248,7 @@ Great for client demos, internal enablement, innovation teams, and AI solution p
 
 ## Ideal buyers and use cases
 
-pilangfuse is especially relevant for:
+TraceBrief AI is especially relevant for:
 
 - **AI consulting firms** packaging repeatable workflows
 - **product teams** researching markets, competitors, or technical topics
@@ -270,7 +270,7 @@ Example use cases:
 The future of AI products is not just better prompts.
 It is **clear workflows, useful deliverables, and trustworthy observability**.
 
-That is why pilangfuse is interesting.
+That is why TraceBrief AI is interesting.
 
 It shows a practical pattern for moving from:
 - isolated model output
@@ -290,7 +290,7 @@ If you are exploring:
 - Langfuse-based observability
 - internal AI tools your team can actually use
 
-pilangfuse is a strong example of how to package that into something demoable, understandable, and commercially useful.
+TraceBrief AI is a strong example of how to package that into something demoable, understandable, and commercially useful.
 
 **Live app:** http://187.124.130.193:8300/  
 **Langfuse dashboard:** http://187.124.130.193:3000/project/cmsd0u5i40006qg06kl9wxycv  
