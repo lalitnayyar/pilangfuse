@@ -3,4 +3,5 @@ node_modules/
 reports/
 logs/
 .run/
+test-results/
 *.tar.gz
