@@ -1,10 +1,10 @@
-# From prompt demos to buyer-ready AI workflows: why I built TraceBrief AI
+# From prompt demos to adoption-ready AI workflows: why I built TraceBrief AI
 
 Most AI demos look impressive for 30 seconds.
 
 You enter a prompt, a model responds, and everyone nods.
 
-But the moment a serious buyer asks:
+But the moment a serious innovation leader asks:
 - How does it actually work?
 - Can I trust the output?
 - Can my team monitor it?
@@ -22,7 +22,7 @@ That is exactly the gap **TraceBrief AI** is designed to solve.
 - a live, user-friendly activity stream
 - observable execution traces for ops and AI teams
 
-If you are selling AI tooling to product, engineering, research, enablement, or internal ops teams, this is the kind of experience buyers understand immediately.
+If you are selling AI tooling to product, engineering, research, enablement, or internal ops teams, this is the kind of experience decision-makers understand immediately.
 
 ---
 
@@ -47,16 +47,16 @@ That means it is not just an AI experiment. It is a **sellable workflow product*
 
 ---
 
-## Why this matters to buyers
+## Why this matters to innovation leaders
 
-Buyers are no longer looking for “one more AI chatbot.”
+Modern teams are no longer looking for “one more AI chatbot.”
 
 They want systems that are:
 - **task-oriented**
 - **observable**
 - **repeatable**
 - **easy to demo internally**
-- **simple for non-technical users to run**
+- **simple for cross-functional teams to run**
 
 TraceBrief AI helps teams go from:
 
@@ -91,7 +91,7 @@ That simplicity is powerful in sales conversations because it removes the intimi
 
 *Example run: live activity timeline, workflow completion, and final research brief in one screen.*
 
-This is where the product gets strong from a buyer perspective.
+This is where the product gets strong from a decision-maker perspective.
 
 In one interface, the user can see:
 - the job was executed
@@ -164,7 +164,7 @@ With Langfuse, the answer is yes.
 
 *Detailed trace interaction view showing the report generation step, prompt structure, parameters, latency, token usage, and source payloads.*
 
-This screenshot is especially useful for technical buyers.
+This screenshot is especially useful for technical leaders.
 
 It shows that TraceBrief AI is not merely logging a success/failure event. It is capturing rich execution detail such as:
 - the exact generation step
@@ -183,7 +183,7 @@ That level of detail makes the workflow:
 
 ---
 
-## Screenshot 6: built for operators, not just end users
+## Screenshot 6: built for operators, not just front-line teams
 
 ![TraceBrief AI settings modal](../docs/assets/marketing/pilangfuse-settings.png)
 
@@ -206,7 +206,7 @@ This makes TraceBrief AI more than a nice demo UI. It becomes a practical intern
 ## Where Langfuse adds real value
 
 A lot of AI products claim “observability.”
-Very few make it part of the story buyers can understand.
+Very few make it part of the story leadership teams can understand.
 
 With Langfuse integrated into the workflow, teams can inspect:
 - trace-level execution
@@ -216,7 +216,7 @@ With Langfuse integrated into the workflow, teams can inspect:
 - model usage and costs
 - debugging context for failures or slow steps
 
-That matters because AI buyers increasingly ask for governance, reliability, and debuggability before they approve broader rollout.
+That matters because AI adoption teams increasingly ask for governance, reliability, and debuggability before they approve broader rollout.
 
 So the value proposition is not only:
 
@@ -235,7 +235,7 @@ If I were positioning TraceBrief AI in market, I would frame it like this:
 ### 1. AI research copilot for teams
 Turn one topic into a structured brief with sources and video references in minutes.
 
-### 2. Multi-agent workflow with buyer-friendly UX
+### 2. Multi-agent workflow with adoption-friendly UX
 Not a raw backend system. A usable product interface teams can adopt quickly.
 
 ### 3. Observable AI for production-minded organizations
@@ -246,7 +246,7 @@ Great for client demos, internal enablement, innovation teams, and AI solution p
 
 ---
 
-## Ideal buyers and use cases
+## Ideal teams and use cases
 
 TraceBrief AI is especially relevant for:
 
@@ -278,7 +278,7 @@ It shows a practical pattern for moving from:
 - to user-facing results
 - to production visibility
 
-And that is exactly the kind of product story that gets attention from real buyers.
+And that is exactly the kind of product story that gets attention from real innovation leaders.
 
 ---
 

@@ -2,7 +2,7 @@
 
 Most AI demos stop at the prompt.
 
-Buyers want more than that.
+Modern teams want more than that.
 They want workflows that are:
 - useful
 - observable
